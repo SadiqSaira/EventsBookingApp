@@ -8,12 +8,12 @@ class EventFilter
 {
     public function apply(Builder $query, Request $request)
     {
-        //search filters based on request parameters
+        // Apply search filters based on request parameters
         return $query->when($request->has('searchByDate'), function ($query) use ($request) {
-            // date filter
+            // Apply date filter
             return $this->applyDateFilter($query, $request->input('searchByDate'));
         })->when($request->has('searchByCountry'), function ($query) use ($request) {
-            // country filter
+            // Apply country filter
             return $this->applyCountryFilter($query, $request->input('searchByCountry'));
         });
     }

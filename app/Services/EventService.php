@@ -13,6 +13,7 @@ class EventService
         // Apply search filters
         $query = (new EventFilter())->apply($query, $request);
 
+        // Paginate the results
         return $query->get();
     }
 }
