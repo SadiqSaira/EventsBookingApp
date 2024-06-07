@@ -17,6 +17,7 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $events = $this->eventService->getEvents($request);
+        
         return inertia('Event/Index', ['events' => EventResource::collection($events)]);
     }
 }
