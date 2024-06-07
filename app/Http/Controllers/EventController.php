@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\EventResource;
 use App\Services\EventService;
-
+//event controller
 class EventController extends Controller
 {
     protected $eventService;
