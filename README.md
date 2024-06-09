@@ -39,7 +39,7 @@ Event Booking App uses a number of open source projects to work properly
 
 ## Installation
 To install [PHP 8.3.6](https://www.php.net/downloads.php), [MySQL 8.0.37](https://dev.mysql.com/downloads/installer/), [Composer](https://getcomposer.org/), [Visual Studio Code](https://code.visualstudio.com/) according to Windows/Mac.
-To install [Laravel Framework 11.10.0](https://nodejs.org/).
+To install [Laravel Framework 11.10.0](https://laravel.com/).
 ```sh
 composer create-project --prefer-dist laravel/laravel EventsBookingApp 
 ```
@@ -76,18 +76,44 @@ CREATE DATABASE EventBookingApp;
 php artisan db:seed 
 ```
 ## Testing
-To run unit tests. 
-```sh
-php artisan test tests/Unit/Service/EventServiceTest.php
-```
+To run unit tests we need to set the testing environment first.
+### Testing Environment.  
+To create a separate database for testing and configure PHPUnit to use this database follow these steps. 
+
+1. **Create a Separate Testing Database:** 
+    - Log in to the MySQL console: 
+      ```sh 
+      mysql -u root -p 
+      ``` 
+
+    - Create the test database: 
+      ```sql 
+      CREATE DATABASE EventBookingApp_testing; 
+      ``` 
+2. **Create `.env.testing` File:** 
+    - In the root of your project directory, create a new file named `.env.testing`. 
+    - Copy the contents of your `.env` file into `.env.testing`. 
+    - Change the `DB_DATABASE` configuration to your test database: 
+
+      ```ini 
+      DB_DATABASE=EventBookingApp_testing 
+      ``` 
+3. **Configure PHPUnit to Use the Test Database:** 
+    - PHPUnit will automatically use the `.env.testing` file when running tests. 
+4. **Run Migrations and Seeders for the Test Database:** 
+    - Run migrations for the test database using the following command: 
+      ```sh 
+      php artisan migrate --env=testing 
+      ``` 
+    - To seed the test database, use: 
+      ```sh 
+      php artisan db:seed --env=testing 
+      ``` 
 ## Issues With this Feature
-1: Running the unit tests removes all data from the database.
-Quick Fix:populate the database again using the following command.
-```sh
-php artisan db:seed 
-```
-2: The changes in Vue files does not reflect in the browser.
+#### The changes in Vue files does not reflect in the browser.
 Qucik Fix: Running the following command builds the JavaScript assets for Vue files.
 ```sh
 npm run build
 ```
+
+
