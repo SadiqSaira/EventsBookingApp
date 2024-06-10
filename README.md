@@ -22,6 +22,8 @@ Customers can filter events based on the country in which the events are being h
   Customers can select a range of dates to see all events whose start date falls within that range.
 * **Single Date:** 
   Customers can select a single date to see all events that occur on or after the selected date.
+### 2: Booking Events
+When customer selects an event by clicking on "Book Ticket" link it takes the customer to the booking page where he can give details to book the tickets.(This feature is not complete.) 
 
 ## Technologies Used
 Event Booking App uses a number of open source projects to work properly
