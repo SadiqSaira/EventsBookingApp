@@ -1,79 +1,44 @@
 <script setup>
-import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
-//import Pagination from "@/Components/Pagination.vue";
-//import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
 
-import FlatPickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css';
-
-defineProps({
-    events: {
+    // Define props
+    const propsData = defineProps({
+      events: {
         type: Object,
-    },
+      },
+    });
+
+    // Use useForm to create reactive form data
+    const form = useForm({
+      event_id: propsData.events.id,
+    first_name: propsData.events.id,
+    last_name: '',
+    email: '',
+    number_of_tickets: '',
 });
 
-let searchByCountry = ref("");
-let searchByDate = ref("");
-
-
-let EventsUrl = computed(() => {
-    const url = new URL(route("events.index"));
-
-    if (searchByCountry.value) {
-        console.log(searchByCountry.value);
-        url.searchParams.set("searchByCountry", searchByCountry.value);
-    }
-    if (searchByDate.value) {
-        console.log(searchByDate.value);
-        url.searchParams.set("searchByDate", searchByDate.value);
-    }
-
-    return url;
-});
-
-watch(
-    () => EventsUrl.value,
-    (newValue) => {
-        router.visit(newValue, {
-            replace: true,
-            preserveState: true,
-            preserveScroll: true,
-        });
-    }
-);
-
-const search = () => {
-    if (searchByDate.value && searchByDate.value.length === 2) {
-        const startDate = searchByDate.value[0].toISOString().split('T')[0];
-        const endDate = searchByDate.value[1].toISOString().split('T')[0];
-        const searchParams = {
-            searchByDate: `${startDate} to ${endDate}`,
-        };
-    } 
-}
+const submit = () => {
+    form.post(route('register'));
+};
 </script>
 
 <template>
-    <Head title="Events" />
-
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Events
-            </h2>
-        </template>
-        <div class="bg-gray-100 py-10">
+        <div >
             <div class="mx-auto max-w-7xl">
                 <div class="px-4 sm:px-6 lg:px-8">
                     <div class="sm:flex sm:items-center">
                         <div class="sm:flex-auto">
                             <h1 class="text-xl font-semibold text-gray-900">
-                                Events
+                                Book Events
                             </h1>
                             <p class="mt-2 text-sm text-gray-700">
-                                A list of all the Events.
                             </p>
                         </div>
 
@@ -81,36 +46,7 @@ const search = () => {
 
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row mt-6">
-                        <div class="relative text-sm text-gray-800 sm:w-1/3 mr-4">
-                            <div class="absolute pl-2 left-0 top-0 bottom-0 flex items-center pointer-events-none text-gray-500">
-                                <MagnifyingGlass />
-                            </div>
-                            <input
-                                type="text"
-                                v-model="searchByCountry"
-                                placeholder="Events By Country..."
-                                id="searchByCountry"
-                                class="block w-3/4 rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                        <div class="relative text-sm text-gray-800 sm:w-1/3">
-                            <div class="absolute pl-2 left-0 top-0 bottom-0 flex items-center pointer-events-none text-gray-500">
-                                <MagnifyingGlass />
-                            </div>
-                            <flat-pickr 
-                                v-model="searchByDate" 
-                                :config="{
-                                    mode: 'range',
-                                    altInput: true,
-                                    altFormat: 'F j, Y',
-                                    dateFormat: 'Y-m-d'
-                                }" 
-                                placeholder="Events By Date"
-                                class="block w-3/4 rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            ></flat-pickr>
-                        </div>    
-                    </div>
+
 
                     <div class="mt-8 flex flex-col">
                         <div
@@ -159,12 +95,6 @@ const search = () => {
                                                 >
                                                     Country
                                                 </th>
-                                                <th
-                                                    scope="col"
-                                                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                                >
-                                                    
-                                                </th>
                                                 
                                             </tr>
                                         </thead>
@@ -178,7 +108,7 @@ const search = () => {
                                                 <td
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                                                 >
-                                                    {{ event.event_name }}
+                                                    {{ event.id }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
@@ -200,17 +130,7 @@ const search = () => {
                                                 >
                                                     {{ event.country }}
                                                 </td>
-                                                <td
-                                                    class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                                                >
-                                                    <Link
-                                                        :href="route('bookevent.index', { eventId: event.id })"
-                                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                                    >
-                                                        Book Tickets
-                                                    </Link>
-
-                                                </td>
+                                                
                                                 
                                             </tr>
                                         </tbody>
@@ -222,6 +142,86 @@ const search = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        
+        <Head title="Book Tickets" />
+
+        <form @submit.prevent="submit">
+            <div>
+                
+                <input
+                    type="hidden"
+                    v-model="form.event_id"
+                    id="event_id"
+                />
+                <InputLabel for="first_name" value="First Name" />
+                {{ propsData.events.id }}
+                <TextInput
+                    id="first_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.first_name"
+                    required
+                    autofocus
+                    autocomplete="first_name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.first_name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="last_name" value="Last Name" />
+
+                <TextInput
+                    id="last_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.password"
+                    required
+                    autocomplete="last_name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.last_name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="email" value="Email" />
+
+                <TextInput
+                    id="email"
+                    type="email"
+                    class="mt-1 block w-full"
+                    v-model="form.email"
+                    required
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.email" />
+                
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="number_of_tickets" value="Number Of Tickets" />
+
+                <TextInput
+                    id="number_of_tickets"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.password_confirmation"
+                    required
+                    autocomplete="number_of_tickets"
+                />
+
+                <InputError class="mt-2" :message="form.errors.number_of_tickets" />
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                
+
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Book Tickets
+                </PrimaryButton>
+            </div>
+        </form>
+    </div>
     </AuthenticatedLayout>
 </template>

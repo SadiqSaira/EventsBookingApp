@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/bookevent', [EventController::class, 'book'])->name('bookevent.index');
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

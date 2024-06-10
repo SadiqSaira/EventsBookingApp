@@ -13,7 +13,10 @@ class EventFilter
             return $this->applyDateFilter($query, $request->input('searchByDate'));
         })->when($request->has('searchByCountry'), function ($query) use ($request) {
             return $this->applyCountryFilter($query, $request->input('searchByCountry'));
+        })->when($request->has('eventId'), function ($query) use ($request) {
+            return $this->applyIdFilter($query, $request->input('eventId'));
         });
+        
     }
 
     protected function applyDateFilter(Builder $query, $date)
@@ -31,5 +34,11 @@ class EventFilter
     protected function applyCountryFilter(Builder $query, $country)
     {
         return $query->where('country', 'like', '%' . $country . '%');
+    }
+
+    protected function applyIdFilter(Builder $query, $id)
+    {
+        $id = (int) $id;
+        return $query->where('id', $id);
     }
 }
