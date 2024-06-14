@@ -22,8 +22,32 @@ Customers can filter events based on the country in which the events are being h
   Customers can select a range of dates to see all events whose start date falls within that range.
 * **Single Date:** 
   Customers can select a single date to see all events that occur on or after the selected date.
-### 2: Booking Events
-When customer selects an event by clicking on "Book Ticket" link it takes the customer to the booking page where he can give details to book the tickets.(This feature is not complete.) 
+## Event Booking Feature
+
+### Overview
+Customers can now click on an event to view its details.
+
+A new screen opens where they can enter their first name, last name, email, and the number of tickets they wish to book.
+
+### Booking Process
+1. **Form Data Entry**:
+    - Customers enter their first name, last name, email, and the number of tickets they wish to book.
+2. **Form Data Validation**:
+    - Upon clicking "Book Event Tickets", several checks are performed on the form data:
+        1. Ensuring the requested number of tickets is within the allowed limit.
+        2. Verifying that the requested number of tickets does not exceed the remaining tickets available for the event.
+
+3. **Customer Data Handling**:
+    - If both conditions are met, and if the customer is new, their details are added; otherwise, existing details are updated.
+
+4. **Booking and Ticket Allocation**:
+    - Booking details are saved.
+    - The booked number of tickets is deducted from the total event ticket count.
+
+### Post-Booking
+
+After a successful booking, customers are redirected to the main events page with a confirmation message of their successful booking.
+
 
 ## Technologies Used
 Event Booking App uses a number of open source projects to work properly
