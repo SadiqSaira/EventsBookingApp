@@ -1,18 +1,21 @@
 <script setup>
 import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
+
 //import Pagination from "@/Components/Pagination.vue";
 //import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, useForm, usePage } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
-
 import FlatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 
-defineProps({
+const propsData = defineProps({
     events: {
         type: Object,
     },
 });
+const page = usePage();
+
+//const successMessage = ref(page.props.value.flash?.success || "");
 
 let searchByCountry = ref("");
 let searchByDate = ref("");
@@ -77,8 +80,8 @@ const search = () => {
                             </p>
                         </div>
 
-                        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-
+                        <div v-if="$page.props.flash.success" class="alert alert-success">
+                            {{ $page.props.flash.success }}
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row mt-6">
@@ -204,7 +207,7 @@ const search = () => {
                                                     class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                                                 >
                                                     <Link
-                                                        :href="route('bookevent.index', { eventId: event.id })"
+                                                        :href="route('event.show', { eventId: event.id })"
                                                         class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                                     >
                                                         Book Tickets

@@ -25,7 +25,7 @@ class EventFactory extends Factory
             'city' => $this->faker->city,
             'country' => $this->faker->country,
             'ticket_allocation' => $this->faker->numberBetween(50, 200),
-            'max_tickets_per_customer' => $this->faker->numberBetween(1, 5),
+            'max_tickets_per_customer' => $this->faker->numberBetween(5, 10),
         ];
     }
 }

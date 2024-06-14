@@ -9,14 +9,16 @@ class EventFilter
     public function apply(Builder $query, Request $request)
     {
         // Apply search filters based on request parameters
-        return $query->when($request->has('searchByDate'), function ($query) use ($request) {
+        $query = $query->when($request->has('searchByDate'), function ($query) use ($request) {
             return $this->applyDateFilter($query, $request->input('searchByDate'));
+
         })->when($request->has('searchByCountry'), function ($query) use ($request) {
             return $this->applyCountryFilter($query, $request->input('searchByCountry'));
+
         })->when($request->has('eventId'), function ($query) use ($request) {
             return $this->applyIdFilter($query, $request->input('eventId'));
         });
-        
+         return $query->where('ticket_allocation', '>', 0);
     }
 
     protected function applyDateFilter(Builder $query, $date)

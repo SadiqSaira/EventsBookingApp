@@ -1,5 +1,5 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import EventBookingLayout from '@/Layouts/EventBookingLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -12,31 +12,52 @@ import { ref, watch, computed } from "vue";
       events: {
         type: Object,
       },
+      eventId: {
+        type: Number, // Adjust type based on your data structure
+        default: null,
+      },
     });
+
+    //const id = propsData.events.data[0].id;
+    const id = propsData.eventId;
+    const maxTickets = propsData.events.data[0].max_tickets_per_customer
+    const ticketsLeft = propsData.events.data[0].ticket_allocation
+
+    // Create an array of numbers from 1 to maxTickets
+    if(ticketsLeft <= maxTickets){
+        maxTickets = ticketsLeft;
+    }
+    const maxTicketsOptions = [];
+    for (let i = 1; i <= maxTickets; i++) {
+        maxTicketsOptions.push(i);
+    }
 
     // Use useForm to create reactive form data
     const form = useForm({
-      event_id: propsData.events.id,
-    first_name: propsData.events.id,
+    event_id: id,
+    first_name: '',
     last_name: '',
     email: '',
-    number_of_tickets: '',
+    number_of_tickets: 1,
+    max_number_of_tickets: maxTickets
 });
 
 const submit = () => {
-    form.post(route('register'));
+    form.post(route('event.book'));
 };
+//{{ events.data[0].id }}
+//{{ eventId}}
 </script>
 
 <template>
-    <AuthenticatedLayout>
+    
         <div >
             <div class="mx-auto max-w-7xl">
                 <div class="px-4 sm:px-6 lg:px-8">
                     <div class="sm:flex sm:items-center">
                         <div class="sm:flex-auto">
                             <h1 class="text-xl font-semibold text-gray-900">
-                                Book Events
+                                Book Event Tickets
                             </h1>
                             <p class="mt-2 text-sm text-gray-700">
                             </p>
@@ -95,6 +116,12 @@ const submit = () => {
                                                 >
                                                     Country
                                                 </th>
+                                                <th
+                                                    scope="col"
+                                                    class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                >
+                                                    Tickets Left
+                                                </th>
                                                 
                                             </tr>
                                         </thead>
@@ -108,7 +135,7 @@ const submit = () => {
                                                 <td
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                                                 >
-                                                    {{ event.id }}
+                                                    {{ event.event_name }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
@@ -130,6 +157,11 @@ const submit = () => {
                                                 >
                                                     {{ event.country }}
                                                 </td>
+                                                <td
+                                                    class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                                                >
+                                                    {{ event.ticket_allocation }}
+                                                </td>
                                                 
                                                 
                                             </tr>
@@ -143,8 +175,9 @@ const submit = () => {
                 </div>
             </div>
         
-        <Head title="Book Tickets" />
-
+        </div>
+        <EventBookingLayout>
+        <div>
         <form @submit.prevent="submit">
             <div>
                 
@@ -154,7 +187,8 @@ const submit = () => {
                     id="event_id"
                 />
                 <InputLabel for="first_name" value="First Name" />
-                {{ propsData.events.id }}
+                
+                
                 <TextInput
                     id="first_name"
                     type="text"
@@ -175,7 +209,7 @@ const submit = () => {
                     id="last_name"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.password"
+                    v-model="form.last_name"
                     required
                     autocomplete="last_name"
                 />
@@ -192,7 +226,7 @@ const submit = () => {
                     class="mt-1 block w-full"
                     v-model="form.email"
                     required
-                    autocomplete="username"
+                    autocomplete="email"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
@@ -201,16 +235,11 @@ const submit = () => {
 
             <div class="mt-4">
                 <InputLabel for="number_of_tickets" value="Number Of Tickets" />
-
-                <TextInput
-                    id="number_of_tickets"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="number_of_tickets"
-                />
-
+                <select id="number-select" v-model="form.number_of_tickets" class="mt-1 block w-full">
+                    <option v-for="number in maxTicketsOptions" :key="number" :value="number" class="mt-1 block w-full">
+                        {{ number }}
+                    </option>
+                </select>
                 <InputError class="mt-2" :message="form.errors.number_of_tickets" />
             </div>
 
@@ -223,5 +252,5 @@ const submit = () => {
             </div>
         </form>
     </div>
-    </AuthenticatedLayout>
+    </EventBookingLayout>
 </template>
