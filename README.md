@@ -22,29 +22,28 @@ Customers can filter events based on the country in which the events are being h
   Customers can select a range of dates to see all events whose start date falls within that range.
 * **Single Date:** 
   Customers can select a single date to see all events that occur on or after the selected date.
-## Event Booking Feature
+### 3: Event Booking Feature
 
-### Overview
+##### Overview
 Customers can now click on an event to view its details.
-
 A new screen opens where they can enter their first name, last name, email, and the number of tickets they wish to book.
 
-### Booking Process
+##### Booking Process
 1. **Form Data Entry**:
-    - Customers enter their first name, last name, email, and the number of tickets they wish to book.
+    Customers enter their first name, last name, email, and the number of tickets they wish to book.
 2. **Form Data Validation**:
-    - Upon clicking "Book Event Tickets", several checks are performed on the form data:
+    Upon clicking "Book Event Tickets", several checks are performed on the form data:
         1. Ensuring the requested number of tickets is within the allowed limit.
         2. Verifying that the requested number of tickets does not exceed the remaining tickets available for the event.
 
 3. **Customer Data Handling**:
-    - If both conditions are met, and if the customer is new, their details are added; otherwise, existing details are updated.
+    If both conditions are met, and if the customer is new, their details are added; otherwise, existing details are updated.
 
 4. **Booking and Ticket Allocation**:
-    - Booking details are saved.
-    - The booked number of tickets is deducted from the total event ticket count.
+    1: Booking details are saved.
+    2: The booked number of tickets is deducted from the total event ticket count.
 
-### Post-Booking
+##### Post-Booking
 
 After a successful booking, customers are redirected to the main events page with a confirmation message of their successful booking.
 
@@ -64,82 +63,67 @@ Event Booking App uses a number of open source projects to work properly
  
 
 ## Installation
-To install [PHP 8.3.6](https://www.php.net/downloads.php), [MySQL 8.0.37](https://dev.mysql.com/downloads/installer/), [Composer](https://getcomposer.org/), [Visual Studio Code](https://code.visualstudio.com/) according to Windows/Mac.
-To install [Laravel Framework 11.10.0](https://laravel.com/).
+Follow these steps to get the Laravel project up and running on your local machine.
+### Prerequisites
+Install [PHP 8.3.6](https://www.php.net/downloads.php), [MySQL 8.0.37](https://dev.mysql.com/downloads/installer/), [Composer](https://getcomposer.org/), [Visual Studio Code](https://code.visualstudio.com/) and  [Laravel Framework 11.10.0](https://laravel.com/) according to Windows/Mac..
+
+### Installation Instructions / Project Setup
+##### 1: Clone the Repository
+Clone the repository from GitHub to your local machine:
+
 ```sh
-composer create-project --prefer-dist laravel/laravel EventsBookingApp 
+git clone https://github.com/SadiqSaira/EventsBookingApp.git
+cd your-laravel-project
 ```
-To install Inertia.js and Vue.js 3.4.0.
+##### 2: Install Dependencies
+Use Composer to install the PHP dependencies and npm to install JavaScript dependencies.
 ```sh
-composer require laravel/breeze --dev 
-php artisan breeze:install 
-npm install 
+composer install
+npm install
 ```
-For date feature 
+##### 3: Set Up Environment Variables
+Rename the .env.example file to .env and change the following  variables to match your local environment setup.
 ```sh
-npm install vue-flatpickr-component flatpickr --save 
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 ```
-To connect Database Mysql 
-1: Change the following lines in .env file at the root directory of the project. 
+Generate a new application key
 ```sh
-DB_CONNECTION=mysql 
-DB_HOST=127.0.0.1 
-DB_PORT=3306 
-DB_DATABASE=EventBookingApp 
-DB_USERNAME=root 
-DB_PASSWORD=root 
+php artisan key:generate
 ```
-2: Run the following command from the Visual Studio Terminal or command line.
+##### 4: Set Up Database
+Run the migrations to set up your database schema and seeders to populate the database with initial data.
 ```sh
-mysql -u your_username -p  
+php artisan migrate
+php artisan db:seed
 ```
-After entering your password, you'll be in the MySQL shell. Now, create a new database: 
-```sh
-CREATE DATABASE EventBookingApp; 
-```
-3: populate the database
-```sh
-php artisan db:seed 
-```
-## Testing
-To run unit tests we need to set the testing environment first.
+## Integration Testing
+To run Integration tests we need to set the testing environment first.
 ### Testing Environment.  
 To create a separate database for testing and configure PHPUnit to use this database follow these steps. 
 
-1. **Create a Separate Testing Database:** 
-    - Log in to the MySQL console: 
-      ```sh 
-      mysql -u root -p 
-      ``` 
-
-    - Create the test database: 
-      ```sql 
-      CREATE DATABASE EventBookingApp_testing; 
-      ``` 
-2. **Create `.env.testing` File:** 
-    - In the root of your project directory, create a new file named `.env.testing`. 
-    - Copy the contents of your `.env` file into `.env.testing`. 
-    - Change the `DB_DATABASE` configuration to your test database: 
+##### 1.Create a Separate Testing Database:
+    Create a seperate testing database for testing.
+##### 2.Create `.env.testing` File:
+1: In the root of your project directory, create a new file named `.env.testing`. 
+2: Copy the contents of your `.env` file into `.env.testing`. 
+3: Change the `DB_DATABASE` configuration to your test database: 
 
       ```ini 
       DB_DATABASE=EventBookingApp_testing 
       ``` 
-3. **Configure PHPUnit to Use the Test Database:** 
-    - PHPUnit will automatically use the `.env.testing` file when running tests. 
-4. **Run Migrations and Seeders for the Test Database:** 
-    - Run migrations for the test database using the following command: 
+##### 3.Configure PHPUnit to Use the Test Database:
+PHPUnit will automatically use the `.env.testing` file when running tests. 
+##### 4.Run Migrations and Seeders for the Test Database:
+1: Run migrations for the test database using the following command: 
       ```sh 
       php artisan migrate --env=testing 
       ``` 
-    - To seed the test database, use: 
+2: To seed the test database, use: 
       ```sh 
       php artisan db:seed --env=testing 
       ``` 
-## Issues With this Feature
-#### The changes in Vue files does not reflect in the browser.
-Qucik Fix: Running the following command builds the JavaScript assets for Vue files.
-```sh
-npm run build
-```
-
-
