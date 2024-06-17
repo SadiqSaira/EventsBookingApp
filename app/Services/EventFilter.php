@@ -6,41 +6,50 @@ use Illuminate\Http\Request;
 
 class EventFilter
 {
-    public function apply(Builder $query, Request $request)
+    protected $query;
+    protected $request;
+
+    public function __construct(Builder $query, Request $request)
     {
-        // Apply search filters based on request parameters
-        $query = $query->when($request->has('searchByDate'), function ($query) use ($request) {
-            return $this->applyDateFilter($query, $request->input('searchByDate'));
-
-        })->when($request->has('searchByCountry'), function ($query) use ($request) {
-            return $this->applyCountryFilter($query, $request->input('searchByCountry'));
-
-        })->when($request->has('eventId'), function ($query) use ($request) {
-            return $this->applyIdFilter($query, $request->input('eventId'));
-        });
-         return $query->where('ticket_allocation', '>', 0);
+        $this->query = $query;
+        $this->request = $request;
     }
 
-    protected function applyDateFilter(Builder $query, $date)
+    public function apply()
+    {
+        // Apply search filters based on request parameters
+        $this->query = $this->query->when($this->request->has('searchByDate'), function ($query) {
+            return $this->applyDateFilter($this->request->input('searchByDate'));
+
+        })->when($this->request->has('searchByCountry'), function ($query) {
+            return $this->applyCountryFilter($this->request->input('searchByCountry'));
+
+        })->when($this->request->has('eventId'), function ($query){
+            return $this->applyIdFilter($this->request->input('eventId'));
+        });
+         return $this->query->where('ticket_allocation', '>', 0);
+    }
+
+    protected function applyDateFilter($date)
     {
         if (strpos($date, ' to ') !== false) {
             $dates = explode(' to ', $date);
             $startDate = $dates[0];
             $endDate = $dates[1];
-            return $query->whereBetween('start_datetime', [$startDate, $endDate]);
+            return $this->query->whereBetween('start_datetime', [$startDate, $endDate]);
         } else {
-            return $query->where('start_datetime', '>=', $date);
+            return $this->query->where('start_datetime', '>=', $date);
         }
     }
 
-    protected function applyCountryFilter(Builder $query, $country)
+    protected function applyCountryFilter($country)
     {
-        return $query->where('country', 'like', '%' . $country . '%');
+        return $this->query->where('country', 'like', '%' . $country . '%');
     }
 
-    protected function applyIdFilter(Builder $query, $id)
+    protected function applyIdFilter($id)
     {
         $id = (int) $id;
-        return $query->where('id', $id);
+        return $this->query->where('id', $id);
     }
 }

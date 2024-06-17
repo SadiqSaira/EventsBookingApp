@@ -12,8 +12,9 @@ class EventService
     public function getEvents(Request $request)
     {
         $query = Event::query();
+        $eventFilter = new EventFilter($query, $request);
 
-        $query = (new EventFilter())->apply($query, $request);
+        $query = $eventFilter->apply();
 
         return $query->get();
     }
