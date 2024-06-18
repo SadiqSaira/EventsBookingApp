@@ -18,10 +18,11 @@ import { ref, watch, computed } from "vue";
       },
     });
 
-    //const id = propsData.events.data[0].id;
+    //const id = propsData.events.id;
     const id = propsData.eventId;
-    const maxTickets = propsData.events.data[0].max_tickets_per_customer
-    const ticketsLeft = propsData.events.data[0].ticket_allocation
+    let maxTickets = propsData.events.data.max_tickets_per_customer
+    const ticketsLeft = propsData.events.data.ticket_allocation
+
 
     // Create an array of numbers from 1 to maxTickets
     if(ticketsLeft <= maxTickets){
@@ -129,7 +130,7 @@ const submit = () => {
                                             class="divide-y divide-gray-200 bg-white"
                                         >
                                             <tr
-                                                v-for="event in events.data"
+                                                v-for="event in events"
                                                 :key="event.id"
                                             >
                                                 <td

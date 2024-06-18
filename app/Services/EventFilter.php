@@ -3,6 +3,7 @@ namespace App\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log; 
 
 class EventFilter
 {
@@ -27,7 +28,13 @@ class EventFilter
         })->when($this->request->has('eventId'), function ($query){
             return $this->applyIdFilter($this->request->input('eventId'));
         });
-         return $this->query->where('ticket_allocation', '>', 0);
+         $filteredQuery = $this->query->where('ticket_allocation', '>', 0);
+         /*Log::info('Filtered Query:', [
+            'output' => $filteredQuery->toSql(),
+            'bindings' => $filteredQuery->getBindings(),
+            'type' => get_class($filteredQuery),
+        ]);*/
+         return $filteredQuery;
     }
 
     protected function applyDateFilter($date)

@@ -2,18 +2,21 @@
 namespace App\Services;
 
 use App\Models\Customer;
-use App\Http\Requests\Event\BookEventRequest;
+use Illuminate\Http\Request;
 
 
 class CustomerService
 {
-
-    public function updateOrCreateByEmail(BookEventRequest $request)
+    protected $request;
+    public function __construct(Request $request){
+        $this->request = $request;
+    }
+    public function updateOrCreateByEmail()
     {
         // Create or update customer
         $customer = Customer::updateOrCreate(
-            ['email' => $request->email],
-            ['first_name' => $request->first_name, 'last_name' => $request->last_name]
+            ['email' => $this->request->email],
+            ['first_name' => $this->request->first_name, 'last_name' => $this->request->last_name]
         );
         return $customer;
     }

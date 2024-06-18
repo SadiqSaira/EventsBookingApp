@@ -6,32 +6,38 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Event\BookEventRequest;
 use App\Http\Resources\EventResource;
 use App\Services\EventService;
+use Illuminate\Support\Facades\Log; 
+use App\Models\Event;
+
 
 //event controller
 class EventController extends Controller
 {
     protected $eventService;
-
-    public function __construct(EventService $eventService)
+    protected $request;
+    public function __construct(EventService $eventService, Request $request)
     {
         $this->eventService = $eventService;
+        $this->request = $request;
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $events = $this->eventService->getEvents($request);
+        $events = $this->eventService->getEvents();
         return inertia('Event/Index', ['events' => EventResource::collection($events)]);
     }
-    public function show(Request $request)
+    public function show()
     {
-        $events = $this->eventService->getEvents($request);
-        return inertia('Event/BookEvent', ['events' => EventResource::collection($events),
-                                            'eventId'=> $request['eventId']
+        //$events = $this->eventService->getEvents($request);
+        $event = $this->eventService->getEventById();
+        
+        return inertia('Event/BookEvent', ['events' => new EventResource($event),
+                                            'eventId'=> $this->request['eventId']
                                           ]);
     }
-    public function book(BookEventRequest $request)
+    public function book()
     {
-        $this->eventService->bookEvents($request);
+        $this->eventService->bookEvents();
 
         return redirect()->route('events.index')->with('success', 'Your booking is successful.');
     }
