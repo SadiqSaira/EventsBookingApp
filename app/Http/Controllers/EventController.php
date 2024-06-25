@@ -22,7 +22,14 @@ class EventController extends Controller
 
     public function index(Request $request)
     {
-        $events = $this->eventService->getEvents($request);
+        $incomingFields =[];
+        if($request->has('searchByDate')){
+            $incomingFields['searchByDate'] = strip_tags($request->input('searchByDate'));
+        }
+        if($request->has('searchByCountry')){
+            $incomingFields['searchByCountry'] = strip_tags($request->input('searchByCountry'));
+        }
+        $events = $this->eventService->getEvents($incomingFields);
         return inertia('Event/Index', ['events' => EventResource::collection($events)]);
     }
     public function show(Request $request)

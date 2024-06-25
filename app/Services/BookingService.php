@@ -1,21 +1,17 @@
 <?php
 namespace App\Services;
 
-use App\Models\Customer;
-use App\Models\Booking;
+use App\Repositories\BookingRepository;
 
 class BookingService
 {
-    public function __construct(){
+    protected $bookingRepository;
+    public function __construct(BookingRepository $bookingRepository){
+        $this->bookingRepository = $bookingRepository;
     }
     public function createBooking($incomingFields, $customerId)
     {
-        $booking = Booking::create([
-            'event_id' => $incomingFields['event_id'],
-            'customer_id' => $customerId,
-            'num_tickets_booked' => $incomingFields['number_of_tickets'],
-            'booking_datetime' => now(),
-        ]);
+        $booking = $this->bookingRepository->createBooking($incomingFields, $customerId);
         return $booking;
     }
 }

@@ -25,18 +25,14 @@ class EventService
     }
     public function getEventById($id)
     {
+        return $this->eventRepository->getEventById($id);
 
-        $event = Event::findOrFail($id);
-        return $event;
     }
-    public function getEvents($request)
+    public function getEvents($incomingFields)
     {
-        $query = Event::query();
-       // $eventRepository = $this->eventRepository($query, $request);
 
-        $query = $this->eventRepository->apply($query, $request);
+       return $this->eventRepository->getEvents($incomingFields);
 
-        return $query->get();
     }
     public function bookEvents($incomingFields)
     {
@@ -47,12 +43,8 @@ class EventService
         $booking = $this->bookingService->createBooking( $incomingFields, $customer->id );
 
         //update Events Tickets 
-        $event = $this->updateEventTickets($incomingFields);
+        $event = $this->eventRepository->updateEventTickets($incomingFields);
     }
 
-    public function updateEventTickets($incomingFields){
-        $event = Event::findOrFail($incomingFields['event_id']);
-        $event->decrement('ticket_allocation',  $incomingFields['number_of_tickets']);
-        return $event;
-    }
+
 }

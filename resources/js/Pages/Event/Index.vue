@@ -56,6 +56,17 @@ const search = () => {
         };
     } 
 }
+
+const formatDate = (datetime) => {
+  if (!datetime) return '';
+
+  const dateObj = new Date(datetime);
+  const day = dateObj.getDate().toString().padStart(2, '0');
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const year = dateObj.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
 </script>
 
 <template>
@@ -186,12 +197,12 @@ const search = () => {
                                                 <td
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                                                 >
-                                                    {{ event.start_datetime }}
+                                                    {{ formatDate(event.start_datetime) }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                                                 >
-                                                    {{ event.end_datetime }}
+                                                    {{ formatDate(event.end_datetime) }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"

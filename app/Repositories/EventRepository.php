@@ -1,9 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log; 
+use App\Models\Event;
 
 class EventRepository
 {
@@ -13,20 +11,27 @@ class EventRepository
     {
 
     }
-
-    public function apply($query, $request)
+    public function getEvents($incomingFields)
     {
-        // Apply search filters based on request parameters
-        $query = $query->when($request->has('searchByDate'), function ($q) use ($request){
-            return $this->applyDateFilter($q, $request->input('searchByDate'));
+        $query = Event::query();
 
-        })->when($request->has('searchByCountry'), function ($q) use ($request) {
-            return $this->applyCountryFilter($q, $request->input('searchByCountry'));
+        //$query = $this->applyfilters($query, $incomingFields);
+        if(isset($incomingFields['searchByDate'])){
+            $query = $this->applyDateFilter($query, $incomingFields['searchByDate']);
+        }
+        if(isset($incomingFields['searchByCountry'])){
+            $query = $this->applyCountryFilter($query,  $incomingFields['searchByCountry']);
+        }
+        $query = $query->where('ticket_allocation', '>', 0);
+        $query = $query->orderBy('start_datetime', 'asc'); 
 
-        });
-         $filteredQuery = $query->where('ticket_allocation', '>', 0);
+        return $query->get();
+    }
+    public function getEventById($id)
+    {
 
-         return $filteredQuery;
+        $event = Event::findOrFail($id);
+        return $event;
     }
 
     protected function applyDateFilter($query, $date)
@@ -46,9 +51,15 @@ class EventRepository
         return $query->where('country', 'like', '%' . $country . '%');
     }
 
-    protected function applyIdFilter($query, $id)
-    {
-        $id = (int) $id;
-        return $query->where('id', $id);
+    // protected function applyIdFilter($query, $id)
+    // {
+    //     $id = (int) $id;
+    //     return $query->where('id', $id);
+    // }
+
+    public function updateEventTickets($incomingFields){
+        $event = Event::findOrFail($incomingFields['event_id']);
+        $event->decrement('ticket_allocation',  $incomingFields['number_of_tickets']);
+        return $event;
     }
 }

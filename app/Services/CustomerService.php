@@ -1,22 +1,19 @@
 <?php
 namespace App\Services;
 
-use App\Models\Customer;
+use App\Repositories\CustomerRepository;
 
 
 class CustomerService
 {
-
-    public function __construct(){
-
+    protected $customerRepository;
+    public function __construct(CustomerRepository $customerRepository){
+        $this->customerRepository = $customerRepository;
     }
     public function updateOrCreateByEmail($incomingFields)
     {
         // Create or update customer
-        $customer = Customer::updateOrCreate(
-            ['email' => $incomingFields['email']],
-            ['first_name' => $incomingFields['first_name'], 'last_name' => $incomingFields['last_name']]
-        );
+        $customer = $this->customerRepository->updateOrCreateByEmail($incomingFields);
         return $customer;
     }
 }
