@@ -14,30 +14,37 @@ use App\Models\Event;
 class EventController extends Controller
 {
     protected $eventService;
-    protected $request;
-    public function __construct(EventService $eventService, Request $request)
+    public function __construct(EventService $eventService)
     {
         $this->eventService = $eventService;
-        $this->request = $request;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $events = $this->eventService->getEvents();
+        $events = $this->eventService->getEvents($request);
         return inertia('Event/Index', ['events' => EventResource::collection($events)]);
     }
-    public function show()
+    public function show(Request $request)
     {
-        //$events = $this->eventService->getEvents($request);
-        $event = $this->eventService->getEventById();
+        $incomingFields['id'] = strip_tags($request['eventId']);
+        $event = $this->eventService->getEventById($incomingFields['id']);
         
         return inertia('Event/BookEvent', ['events' => new EventResource($event),
-                                            'eventId'=> $this->request['eventId']
+                                            'eventId'=> $request['eventId']
                                           ]);
     }
-    public function book()
+    public function book(BookEventRequest $request)
     {
-        $this->eventService->bookEvents();
+
+        $incomingFields['email'] = strip_tags($request['email']);
+        $incomingFields['first_name'] = strip_tags($request['first_name']);
+        $incomingFields['last_name'] = strip_tags($request['last_name']);
+        $incomingFields['event_id'] = strip_tags($request['event_id']);
+        $incomingFields['number_of_tickets'] = strip_tags($request['number_of_tickets']);
+
+
+        $this->eventService->bookEvents($incomingFields);
 
         return redirect()->route('events.index')->with('success', 'Your booking is successful.');
     }

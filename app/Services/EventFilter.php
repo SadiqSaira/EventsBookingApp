@@ -25,8 +25,6 @@ class EventFilter
         })->when($this->request->has('searchByCountry'), function ($query) {
             return $this->applyCountryFilter($this->request->input('searchByCountry'));
 
-        })->when($this->request->has('eventId'), function ($query){
-            return $this->applyIdFilter($this->request->input('eventId'));
         });
          $filteredQuery = $this->query->where('ticket_allocation', '>', 0);
          /*Log::info('Filtered Query:', [

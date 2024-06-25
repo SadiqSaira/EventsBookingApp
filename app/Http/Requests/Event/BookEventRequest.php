@@ -20,7 +20,11 @@ class BookEventRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        $this->event = Event::findOrFail($this->input('event_id'));
+        /* Verify if the total number of available tickets has changed
+        * while the user was on the booking screen due to other bookings.
+        */
+        
+        $this->event = Event::findOrFail($this->input("event_id"));
         $this->allocatedTickets = $this->event->ticket_allocation;
         $this->customerMaxTickets = $this->input('max_number_of_tickets');
     }
@@ -32,6 +36,9 @@ class BookEventRequest extends FormRequest
     public function rules(): array
     {
         
+       /* Select the minimum value between the total number of tickets left 
+       * and the maximum number of tickets allowed per customer.
+       */
 
         $maxTicketsAllowed = min($this->allocatedTickets, $this->customerMaxTickets);
 

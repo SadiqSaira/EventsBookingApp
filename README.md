@@ -80,6 +80,7 @@ Use Composer to install the PHP dependencies and npm to install JavaScript depen
 ```sh
 composer install
 npm install
+npm run build
 ```
 ##### 3: Set Up Environment Variables
 Rename the .env.example file to .env and change the following  variables to match your local environment setup.

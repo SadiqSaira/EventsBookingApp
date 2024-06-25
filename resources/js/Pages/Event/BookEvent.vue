@@ -44,6 +44,7 @@ import { ref, watch, computed } from "vue";
 });
 
 const submit = () => {
+    form.event_id = id;
     form.post(route('event.book'));
 };
 //{{ events.data[0].id }}

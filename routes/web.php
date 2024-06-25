@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
-Route::get('/showevent', [EventController::class, 'show'])->name('event.show');
+Route::get('/bookevent', [EventController::class, 'show'])->name('event.show');
 Route::post('/bookevent', [EventController::class, 'book'])->name('event.book');
 
-
+Route::get('/phpinfo', function () {
+    return phpinfo();
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
