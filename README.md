@@ -102,7 +102,17 @@ Run the migrations to set up your database schema and seeders to populate the da
 php artisan migrate
 php artisan db:seed
 ```
-## Integration Testing
+##### 4: To visit the app 
+To visit the app use the following URL 
+```sh
+http://localhost:8000/events
+```
+
+## Unit and Integration Test
+this build includes 
+Unit tests for EventController, EventRepository, and EventService.
+Integration Test for EventRepository.
+
 To run Integration tests we need to set the testing environment first.
 ### Testing Environment.  
 To create a separate database for testing and configure PHPUnit to use this database follow these steps. 
@@ -128,3 +138,11 @@ PHPUnit will automatically use the `.env.testing` file when running tests.
       ```sh 
       php artisan db:seed --env=testing 
       ``` 
+3: To run all the tests, use: 
+      ```sh 
+       php artisan test 
+      ```      
+      or 
+      ```sh 
+       ./vendor/bin/phpunit tests
+      ```    
