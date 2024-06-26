@@ -5,19 +5,19 @@ use App\Models\Event;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\Event\BookEventRequest;
-use App\Services\CustomerService;
-use App\Services\BookingService;
-use App\Repositories\EventRepository;
+use App\Services\CustomerServiceInterface;
+use App\Services\BookingServiceInterface;
+use App\Repositories\EventRepositoryInterface;
 
-class EventService
+class EventService implements EventServiceInterface
 {
-    protected CustomerService $CustomerService;
-    protected BookingService $bookingService;
-    protected EventRepository $eventRepository;
+    protected  $CustomerService;
+    protected  $bookingService;
+    protected  $eventRepository;
 
-    public function __construct(CustomerService $CustomerService, 
-                                BookingService $bookingService,
-                                EventRepository $eventRepository)
+    public function __construct(CustomerServiceInterface $CustomerService, 
+                                BookingServiceInterface $bookingService,
+                                EventRepositoryInterface  $eventRepository)
     {
         $this->CustomerService = $CustomerService;
         $this->bookingService = $bookingService;

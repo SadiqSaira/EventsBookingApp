@@ -1,9 +1,10 @@
 <?php
 namespace App\Repositories;
+use App\Repositories\EventRepositoryInterface;
 
 use App\Models\Event;
 
-class EventRepository
+class EventRepository implements EventRepositoryInterface
 {
 
 
@@ -24,7 +25,7 @@ class EventRepository
         }
         $query = $query->where('ticket_allocation', '>', 0);
         $query = $query->orderBy('start_datetime', 'asc'); 
-
+        
         return $query->get();
     }
     public function getEventById($id)
@@ -34,7 +35,7 @@ class EventRepository
         return $event;
     }
 
-    protected function applyDateFilter($query, $date)
+    public function applyDateFilter($query, $date)
     {
         if (strpos($date, ' to ') !== false) {
             $dates = explode(' to ', $date);
@@ -46,16 +47,11 @@ class EventRepository
         }
     }
 
-    protected function applyCountryFilter($query, $country)
+    public function applyCountryFilter($query, $country)
     {
         return $query->where('country', 'like', '%' . $country . '%');
     }
 
-    // protected function applyIdFilter($query, $id)
-    // {
-    //     $id = (int) $id;
-    //     return $query->where('id', $id);
-    // }
 
     public function updateEventTickets($incomingFields){
         $event = Event::findOrFail($incomingFields['event_id']);

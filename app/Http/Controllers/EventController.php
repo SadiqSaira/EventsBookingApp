@@ -5,7 +5,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\Event\BookEventRequest;
 use App\Http\Resources\EventResource;
-use App\Services\EventService;
+use App\Services\EventServiceInterface;
 use Illuminate\Support\Facades\Log; 
 use App\Models\Event;
 
@@ -14,7 +14,7 @@ use App\Models\Event;
 class EventController extends Controller
 {
     protected $eventService;
-    public function __construct(EventService $eventService)
+    public function __construct(EventServiceInterface  $eventService)
     {
         $this->eventService = $eventService;
 

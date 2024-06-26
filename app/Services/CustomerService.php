@@ -2,9 +2,9 @@
 namespace App\Services;
 
 use App\Repositories\CustomerRepository;
+use App\Services\CustomerServiceInterface;
 
-
-class CustomerService
+class CustomerService implements CustomerServiceInterface
 {
     protected $customerRepository;
     public function __construct(CustomerRepository $customerRepository){

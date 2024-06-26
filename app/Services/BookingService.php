@@ -2,8 +2,9 @@
 namespace App\Services;
 
 use App\Repositories\BookingRepository;
+use App\Services\BookingServiceInterface;
 
-class BookingService
+class BookingService implements BookingServiceInterface
 {
     protected $bookingRepository;
     public function __construct(BookingRepository $bookingRepository){
