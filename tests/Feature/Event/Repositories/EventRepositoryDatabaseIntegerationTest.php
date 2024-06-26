@@ -1,24 +1,24 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Feature\Event\Repositories;
 
 use App\Models\Event;
-use App\Services\EventService;
+use App\Repositories\EventRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
-class EventServiceTest extends TestCase
+class EventRepositoryDatabaseIntegerationTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $eventService;
+    protected $eventRepository;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->eventService = new EventService();
+        $this->eventRepository = new EventRepository();
     }
 
     public function test_it_can_get_events_without_search_filters()
@@ -29,10 +29,13 @@ class EventServiceTest extends TestCase
         // Make call to application...
         Event::factory()->count(5)->create();
 
-        $this->assertDatabaseCount('events', 5);
+        $incomingField = [];
+        $events = $this->eventRepository->getEvents($incomingField);
+        $this->assertCount(5, $events);
+
     }
 
-    public function test_it_can_get_events_with_search_by_date_filter()
+    public function test_it_can_get_events_with_search_by_date_range_filter()
     {
         // Resetting the database
         $this->refreshDatabase();
@@ -49,7 +52,7 @@ class EventServiceTest extends TestCase
 
         $request = new Request(['searchByDate' => '2024-06-01 to 2024-06-10']);
 
-        $events = $this->eventService->getEvents($request);
+        $events = $this->eventRepository->getEvents($request);
 
         $this->assertCount(2, $events);
     }
@@ -71,7 +74,7 @@ class EventServiceTest extends TestCase
 
         $request = new Request(['searchByDate' => '2024-06-05']);
 
-        $events = $this->eventService->getEvents($request);
+        $events = $this->eventRepository->getEvents($request);
 
         $this->assertCount(1, $events);
     }
@@ -93,7 +96,7 @@ class EventServiceTest extends TestCase
 
         $request = new Request(['searchByCountry' => 'USA']);
 
-        $events = $this->eventService->getEvents($request);
+        $events = $this->eventRepository->getEvents($request);
 
         $this->assertCount(1, $events);
     }
@@ -119,7 +122,7 @@ class EventServiceTest extends TestCase
             'searchByDate' => '2024-06-01 to 2024-06-10',
             'searchByCountry' => 'USA']);
 
-        $events = $this->eventService->getEvents($request);
+        $events = $this->eventRepository->getEvents($request);
 
         $this->assertCount(1, $events);
 
@@ -149,7 +152,7 @@ class EventServiceTest extends TestCase
             'searchByDate' => '2024-06-02',
             'searchByCountry' => 'UK']);
 
-        $events = $this->eventService->getEvents($request);
+        $events = $this->eventRepository->getEvents($request);
 
         $this->assertCount(1, $events);
 
